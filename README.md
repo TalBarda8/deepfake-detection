@@ -284,6 +284,7 @@ deepfake-detection/
 │   ├── PRD.md                   # Product Requirements Document
 │   ├── deepfake_generation.md   # Deepfake generation documentation
 │   ├── detection_agent.md       # Detection system documentation
+│   ├── evaluation.md            # System evaluation and academic analysis
 │   └── PHASE2_COMPLETION_GUIDE.md
 ├── results/                     # Analysis results (optional)
 ├── detect.py                    # Main CLI entry point
@@ -298,6 +299,7 @@ deepfake-detection/
 - **[PRD.md](docs/PRD.md)**: Complete product requirements and specifications
 - **[detection_agent.md](docs/detection_agent.md)**: Detailed system architecture and design decisions
 - **[deepfake_generation.md](docs/deepfake_generation.md)**: Deepfake video generation process
+- **[evaluation.md](docs/evaluation.md)**: System evaluation methodology and academic analysis
 
 ## Methodology
 
@@ -336,6 +338,67 @@ Prompts are designed to:
    - Requires API access and incurs costs
 
 For detailed discussion of limitations, see [detection_agent.md](docs/detection_agent.md).
+
+## Evaluation & Results
+
+### Academic Evaluation Approach
+
+This system is evaluated based on **reasoning quality and interpretability** rather than raw classification accuracy. The evaluation focuses on:
+
+- **Specificity of observations**: Are cues concrete and localized?
+- **Evidence quality**: Is evidence relevant and balanced?
+- **Reasoning coherence**: Does the verdict follow logically from evidence?
+- **Uncertainty handling**: Is uncertainty expressed appropriately?
+
+### Why Reasoning Quality Over Accuracy?
+
+Binary accuracy metrics are insufficient for this project because:
+
+1. **Sample size**: 2 test videos provide no statistical significance
+2. **Assignment objectives**: Focus explicitly on explanation quality
+3. **Practical value**: Interpretable analysis is more useful than black-box classification
+4. **Honest limitations**: System acknowledges uncertainty rather than forcing binary decisions
+
+A system that says *"LIKELY FAKE (75%): Unnatural smoothing in frames 2, 5, 7 + temporal warping"* is more valuable than one that says *"FAKE: 99%"* without explanation.
+
+### Evaluation Results
+
+**Status**: [To be completed after testing on actual videos]
+
+Detailed evaluation including:
+- Test video specifications and results
+- Comparative analysis (real vs. fake)
+- Error analysis and failure modes
+- Academic reflection on approach
+
+**Full Evaluation**: See **[docs/evaluation.md](docs/evaluation.md)** for comprehensive evaluation methodology, results, and academic analysis.
+
+### Key Evaluation Criteria
+
+| Criterion | Weight | Assessment Method |
+|-----------|--------|-------------------|
+| **Reasoning Specificity** | 40% | Concrete observations with frame references |
+| **Evidence Quality** | 30% | Relevant, multi-faceted, balanced evidence |
+| **Reasoning Coherence** | 20% | Logical flow from evidence to verdict |
+| **Uncertainty Handling** | 10% | Appropriate confidence and limitations |
+
+**Note**: Classification accuracy serves as validation only, not the primary metric.
+
+### Expected Outcomes
+
+**Success Metrics**:
+- ✅ Specific, frame-referenced observations
+- ✅ Multiple evidence types (visual, temporal, semantic)
+- ✅ Clear reasoning from evidence to conclusion
+- ✅ Appropriate uncertainty expression
+- ✅ Transparent limitation acknowledgment
+
+**Not Success Metrics**:
+- ❌ 100% classification accuracy (not realistic or necessary)
+- ❌ Perfect confidence calibration (2 videos insufficient)
+- ❌ State-of-the-art detection performance
+
+The academic value lies in demonstrating **LLM-based reasoning for deepfake detection** with interpretable, transparent analysis.
 
 ## Testing
 
@@ -444,4 +507,4 @@ This project is developed for academic purposes. Code is provided as-is for educ
 
 **Version**: 1.0.0
 **Last Updated**: December 27, 2025
-**Status**: Phase 3 Complete - Detection System Implemented
+**Status**: Phase 4 Complete - Full System with Evaluation Framework
