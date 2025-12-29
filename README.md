@@ -425,7 +425,7 @@ pytest -v
 pytest --cov=src --cov-report=html
 ```
 
-**Test Coverage**: 60-70% coverage of core modules (video_processor, llm_analyzer, detector, output_formatter).
+**Test Coverage**: 81% overall coverage (detector: 96%, output_formatter: 92%, llm_analyzer: 77%, video_processor: 69%).
 
 **What is tested**:
 - Frame sampling strategies

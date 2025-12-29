@@ -32,7 +32,7 @@ This document describes the unit test suite for the deepfake detection system. T
 | detector.py | test_detector.py | 7 | 14 | Pipeline orchestration, batch processing |
 | output_formatter.py | test_output_formatter.py | 6 | 17 | Console/JSON formatting, file operations |
 
-**Total**: 26 test classes, 64+ test methods
+**Total**: 26 test classes, 67 test methods
 
 ---
 
@@ -445,9 +445,16 @@ When modifying code:
 
 Run `pytest --cov=src` to see current coverage.
 
+**Achieved Coverage** (as of December 29, 2025):
+- **Overall**: 81% coverage
+- **detector.py**: 96% coverage
+- **output_formatter.py**: 92% coverage
+- **llm_analyzer.py**: 77% coverage
+- **video_processor.py**: 69% coverage
+
 ### Target Coverage
 
-- **Core modules**: 60-70% coverage (achieved)
+- **Core modules**: 60-70% coverage ✅ **EXCEEDED** (achieved 81%)
 - **Utility modules**: 50-60% coverage
 - **Integration**: Tested via mocks
 
