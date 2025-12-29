@@ -7,8 +7,10 @@ This directory contains deepfake (synthetic) videos generated for testing the LL
 ### Primary Test Video
 
 **Filename**: `deepfake_inframe_v1.mp4`
-**Status**: _To be added_
+**Status**: ✅ **Added** (December 29, 2025)
 **Generation Method**: Google Flow (Inframe option)
+**File Size**: 1.2 MB
+**Original Filename**: `This_man_should_202512291835_rgo53.mp4`
 
 **Purpose**: Test case for the deepfake detection system. This video is generated from a single still image and should exhibit characteristics typical of deepfake content.
 
@@ -26,25 +28,24 @@ Optional: Extracted frames for documentation purposes
 
 ## Video Specifications
 
-_To be filled after generation_
-
-### Expected Metadata
+### Actual Metadata
 
 ```
 Format: MP4
-Codec: H.264 or H.265
-Resolution: 720p or higher (recommended 1080p)
-Duration: 3-10 seconds
-Frame Rate: 24-60 fps
-File Size: <50 MB (preferably <20 MB)
+File Size: 1.2 MB
+Generation Date: December 29, 2025 at 18:35
+Original Filename: This_man_should_202512291835_rgo53.mp4
 ```
+
+**Note**: Additional metadata (resolution, duration, frame rate, codec) will be extracted during system evaluation.
 
 ### Generation Details
 
 - **Tool**: Google Flow (Inframe option)
-- **Generation Date**: _[To be filled]_
-- **Source Image**: _[Description]_
-- **Settings**: _[Configuration details]_
+- **Generation Date**: December 29, 2025
+- **Generation Time**: 18:35 (based on filename timestamp)
+- **Source Image**: Still image of a person (male subject based on filename "This_man_should...")
+- **Settings**: Default Google Flow Inframe settings
 
 Full generation documentation: See `docs/deepfake_generation.md`
 
@@ -99,9 +100,9 @@ The deepfake video should exhibit some of the following characteristics that the
 
 ## File Status
 
-- [ ] `deepfake_inframe_v1.mp4` - Primary deepfake video
-- [ ] `source_image.jpg` - Source still image
+- [x] `deepfake_inframe_v1.mp4` - Primary deepfake video ✅ **ADDED**
+- [ ] `source_image.jpg` - Source still image (optional)
 - [ ] Additional sample frames (optional)
 
-**Last Updated**: 2025-12-27
-**Status**: Awaiting video generation
+**Last Updated**: 2025-12-29
+**Status**: Deepfake video successfully added and ready for evaluation
