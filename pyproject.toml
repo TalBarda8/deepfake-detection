@@ -1,0 +1,102 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deepfake-detection"
+version = "2.0.0"
+description = "Interpretable deepfake detection system using local reasoning agent and optional LLM analysis"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Academic Use Only"}
+authors = [
+    {name = "Tal Barda", email = "talbarda@example.com"}
+]
+keywords = [
+    "deepfake",
+    "detection",
+    "video-analysis",
+    "llm",
+    "reasoning-agent",
+    "computer-vision",
+    "interpretability"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    "anthropic>=0.39.0",
+    "opencv-python>=4.10.0.84",
+    "pillow>=11.0.0",
+    "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock>=3.12.0",
+]
+analysis = [
+    "jupyter>=1.0.0",
+    "matplotlib>=3.8.0",
+    "numpy>=1.26.0",
+    "pandas>=2.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/TalBarda8/deepfake-detection"
+Documentation = "https://github.com/TalBarda8/deepfake-detection/tree/main/docs"
+Repository = "https://github.com/TalBarda8/deepfake-detection"
+
+[project.scripts]
+deepfake-detect = "detect:main"
+
+[tool.setuptools]
+packages = ["src"]
+
+[tool.setuptools.package-data]
+src = ["*.yaml", "*.md"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --strict-markers --cov=src --cov-report=html --cov-report=term"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if False:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
