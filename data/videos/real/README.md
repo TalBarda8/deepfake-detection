@@ -6,9 +6,15 @@ This directory contains authentic, non-manipulated videos for testing the LLM-ba
 
 ### Primary Test Video
 
-**Filename**: `real_video_v1.mp4` (or similar)
-**Status**: _To be added_
-**Source**: _[To be specified]_
+**Filename**: `real_video_v1.mp4`
+**Status**: ✅ **Added** (December 29, 2025)
+**Source**: Vecteezy (stock footage)
+**Original Filename**: `vecteezy_focused-man-savoring-pizza-while-brainstorming-on-his-computer_69328397.mov`
+**File Size**: 8.5 MB
+**Duration**: 21.0 seconds
+**Resolution**: 1080x1920 (portrait)
+**Frame Rate**: 29.97 fps
+**Codec**: H.264
 
 **Purpose**: Control test case for the deepfake detection system. This video should be correctly identified as authentic/real.
 
@@ -97,8 +103,8 @@ For each real video added:
 
 ## File Status
 
-- [ ] `real_video_v1.mp4` - Primary authentic video
+- [x] `real_video_v1.mp4` - Primary authentic video ✅ **ADDED**
 - [ ] Additional real videos (optional)
 
-**Last Updated**: 2025-12-27
-**Status**: Awaiting video acquisition
+**Last Updated**: 2025-12-29
+**Status**: Real video successfully added and ready for evaluation
