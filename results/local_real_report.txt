@@ -1,0 +1,66 @@
+======================================================================
+DEEPFAKE DETECTION - DETAILED ANALYSIS REPORT
+======================================================================
+
+VIDEO INFORMATION
+----------------------------------------------------------------------
+Filename: Unknown
+Path: Unknown
+Duration: 0.00 seconds
+Resolution: Unknown
+Frame Rate: 0.00 fps
+Codec: Unknown
+File Size: 0.00 MB
+
+DETECTION RESULTS
+----------------------------------------------------------------------
+Classification: REAL
+Confidence Level: 95%
+Frames Analyzed: 10
+Sampling Strategy: uniform
+
+FRAME-LEVEL OBSERVATIONS
+----------------------------------------------------------------------
+Frame 0:
+  - Low texture variance detected (potential smoothing)
+  - Low edge density (possible boundary blending)
+Frame 1:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+Frame 3:
+  - Low texture variance detected (potential smoothing)
+  - Low edge density (possible boundary blending)
+Frame 6:
+  - Moderate texture variance (some smoothing possible)
+Frame 9:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+
+TEMPORAL OBSERVATIONS
+----------------------------------------------------------------------
+Temporal analysis across 10 frames: Motion appears continuous and natural.
+
+FINAL REASONING
+----------------------------------------------------------------------
+Classification: REAL (Confidence: 95%)
+
+The video demonstrates characteristics consistent with authentic, non-manipulated footage.
+
+KEY EVIDENCE:
+  - Low texture variance detected (potential smoothing)
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+
+ANALYSIS BREAKDOWN:
+  - Visual Artifacts: 5 indicators detected
+  - Temporal Consistency: 0 issues identified
+  - Frames Analyzed: 5
+  - Combined Suspicion Score: 0.13/1.00
+
+CONCLUSION:
+The video shows natural characteristics expected of authentic footage. No significant artifacts or temporal inconsistencies were detected that would suggest synthetic generation or manipulation.
+
+======================================================================
+Model Used: v1.0
+Analysis Timestamp: 2025-12-29T19:12:58.651084
+======================================================================

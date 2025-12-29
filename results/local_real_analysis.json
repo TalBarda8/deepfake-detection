@@ -1,0 +1,23 @@
+{
+  "video_path": "",
+  "filename": "",
+  "metadata": {},
+  "detection": {
+    "classification": "REAL",
+    "confidence": 95,
+    "num_frames_analyzed": 10,
+    "sampling_strategy": "uniform"
+  },
+  "analysis": {
+    "reasoning": "Classification: REAL (Confidence: 95%)\n\nThe video demonstrates characteristics consistent with authentic, non-manipulated footage.\n\nKEY EVIDENCE:\n  - Low texture variance detected (potential smoothing)\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)\n\nANALYSIS BREAKDOWN:\n  - Visual Artifacts: 5 indicators detected\n  - Temporal Consistency: 0 issues identified\n  - Frames Analyzed: 5\n  - Combined Suspicion Score: 0.13/1.00\n\nCONCLUSION:\nThe video shows natural characteristics expected of authentic footage. No significant artifacts or temporal inconsistencies were detected that would suggest synthetic generation or manipulation.",
+    "evidence": {
+      "frame_observations": "Frame 0:\n  - Low texture variance detected (potential smoothing)\n  - Low edge density (possible boundary blending)\nFrame 1:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)\nFrame 3:\n  - Low texture variance detected (potential smoothing)\n  - Low edge density (possible boundary blending)\nFrame 6:\n  - Moderate texture variance (some smoothing possible)\nFrame 9:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)",
+      "temporal_observations": "Temporal analysis across 10 frames: Motion appears continuous and natural."
+    }
+  },
+  "system": {
+    "model_name": "v1.0",
+    "api_provider": "local",
+    "timestamp": "2025-12-29T19:12:58.651084"
+  }
+}

@@ -25,7 +25,7 @@ class LLMAnalyzer:
 
     def __init__(
         self,
-        api_provider: str = "anthropic",
+        api_provider: str = "local",
         model_name: Optional[str] = None,
         api_key: Optional[str] = None,
         prompts_dir: str = "prompts"
@@ -34,7 +34,7 @@ class LLMAnalyzer:
         Initialize LLM analyzer.
 
         Args:
-            api_provider: LLM provider ('anthropic', 'openai', or 'mock')
+            api_provider: LLM provider ('local', 'anthropic', 'openai', or 'mock')
             model_name: Specific model to use (optional, uses default)
             api_key: API key (optional, reads from environment)
             prompts_dir: Directory containing prompt templates
@@ -51,7 +51,7 @@ class LLMAnalyzer:
         # Set API key
         self.api_key = api_key or self._get_api_key()
 
-        # Initialize API client
+        # Initialize API client (or local agent)
         self.client = self._initialize_client()
 
         # Load prompts
@@ -60,15 +60,17 @@ class LLMAnalyzer:
     def _get_default_model(self) -> str:
         """Get default model for the provider."""
         defaults = {
+            'local': 'v1.0',
             'anthropic': 'claude-3-5-sonnet-20241022',
             'openai': 'gpt-4o',
             'mock': 'mock-vision-model'
         }
-        return defaults.get(self.api_provider, 'claude-3-5-sonnet-20241022')
+        return defaults.get(self.api_provider, 'v1.0')
 
     def _get_api_key(self) -> Optional[str]:
         """Get API key from environment variables."""
         env_vars = {
+            'local': None,
             'anthropic': 'ANTHROPIC_API_KEY',
             'openai': 'OPENAI_API_KEY',
             'mock': None
@@ -81,7 +83,17 @@ class LLMAnalyzer:
 
     def _initialize_client(self):
         """Initialize API client based on provider."""
-        if self.api_provider == 'anthropic':
+        if self.api_provider == 'local':
+            try:
+                from src.local_agent import LocalAgentProvider
+                return LocalAgentProvider(agent_version=self.model_name)
+            except ImportError as e:
+                raise ImportError(
+                    f"Local agent not found: {e}. "
+                    "Ensure src/local_agent.py and agents/ directory exist."
+                )
+
+        elif self.api_provider == 'anthropic':
             try:
                 import anthropic
                 return anthropic.Anthropic(api_key=self.api_key)
@@ -227,7 +239,11 @@ Be specific and reference concrete observations from the analysis."""
         Returns:
             Analysis results dictionary
         """
-        # Prepare the prompt
+        # Use local agent directly if provider is 'local'
+        if self.api_provider == 'local':
+            return self.client.analyze_frame(frame, frame_index, metadata or {})
+
+        # Prepare the prompt for API-based analysis
         prompt = self.prompts['frame_analysis']
 
         # Add metadata context if available
@@ -262,7 +278,11 @@ Be specific and reference concrete observations from the analysis."""
         Returns:
             Temporal analysis results
         """
-        # Prepare the prompt
+        # Use local agent directly if provider is 'local'
+        if self.api_provider == 'local':
+            return self.client.analyze_temporal_sequence(frames, frame_indices or list(range(len(frames))))
+
+        # Prepare the prompt for API-based analysis
         prompt = self.prompts['temporal_analysis']
 
         # Add frame count context
@@ -299,7 +319,11 @@ Be specific and reference concrete observations from the analysis."""
         Returns:
             Final verdict with classification, confidence, and reasoning
         """
-        # Compile evidence from analyses
+        # Use local agent directly if provider is 'local'
+        if self.api_provider == 'local':
+            return self.client.synthesize_verdict(frame_analyses, temporal_analysis, metadata)
+
+        # Compile evidence from analyses (for API-based analysis)
         evidence = self._compile_evidence(frame_analyses, temporal_analysis)
 
         # Prepare synthesis prompt

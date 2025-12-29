@@ -1,0 +1,75 @@
+# Deepfake Detector Agent Definition
+# Version 1.0 - Local, Self-Contained Reasoning Agent
+
+agent:
+  name: "Deepfake Detector Agent"
+  version: "1.0.0"
+  created: "2025-12-29"
+  author: "Assignment 09 Team"
+  type: "local_reasoning"
+  description: >
+    Self-contained deepfake detection agent using rule-based heuristics
+    and structured reasoning. No external API calls required.
+
+capabilities:
+  - visual_artifact_detection
+  - temporal_consistency_analysis
+  - evidence_synthesis
+  - confidence_scoring
+  - natural_language_reasoning
+
+model_type: "rule_based_with_structured_reasoning"
+deterministic: true
+requires_api: false
+requires_network: false
+
+# Output Format Specification
+output_format:
+  classification_values:
+    - "REAL"
+    - "LIKELY REAL"
+    - "UNCERTAIN"
+    - "LIKELY FAKE"
+    - "FAKE"
+
+  confidence_range: [0, 100]
+  confidence_unit: "percentage"
+
+  required_fields:
+    - classification
+    - confidence
+    - reasoning
+    - evidence
+    - scores
+
+# Detection Thresholds
+thresholds:
+  # Combined suspicion score thresholds (0.0 = real, 1.0 = fake)
+  fake_confidence_high: 0.75      # >= 0.75 → FAKE
+  fake_confidence_moderate: 0.55  # >= 0.55 → LIKELY FAKE
+  uncertain_lower: 0.45            # 0.45-0.55 → UNCERTAIN
+  uncertain_upper: 0.55
+  real_confidence_moderate: 0.25  # < 0.45 → LIKELY REAL, < 0.25 → REAL
+
+# Analysis Configuration
+analysis:
+  visual_weight: 0.6   # Visual artifacts contribute 60% to final score
+  temporal_weight: 0.4 # Temporal issues contribute 40% to final score
+
+  min_confidence: 50   # Minimum confidence for any classification
+  max_confidence: 95   # Maximum confidence (avoid overconfidence)
+
+# Versioning and Immutability
+versioning:
+  immutable: true
+  changelog:
+    - version: "1.0.0"
+      date: "2025-12-29"
+      changes: "Initial agent definition with visual and temporal analysis"
+
+# Reproducibility Guarantees
+reproducibility:
+  deterministic_behavior: true
+  version_locked: true
+  rules_version: "1.0"
+  output_schema_version: "1.0"

@@ -1,0 +1,23 @@
+{
+  "video_path": "",
+  "filename": "",
+  "metadata": {},
+  "detection": {
+    "classification": "UNCERTAIN",
+    "confidence": 50,
+    "num_frames_analyzed": 10,
+    "sampling_strategy": "uniform"
+  },
+  "analysis": {
+    "reasoning": "Classification: UNCERTAIN (Confidence: 50%)\n\nThe analysis reveals mixed signals, making confident classification difficult.\n\nKEY EVIDENCE:\n  - Very low motion between frames 2 and 3 (potentially static/frozen)\n  - Low edge density (possible boundary blending)\n  - Very low motion between frames 3 and 4 (potentially static/frozen)\n  - Very low motion between frames 4 and 5 (potentially static/frozen)\n  - Very low motion between frames 0 and 1 (potentially static/frozen)\n\nANALYSIS BREAKDOWN:\n  - Visual Artifacts: 5 indicators detected\n  - Temporal Consistency: 9 issues identified\n  - Frames Analyzed: 5\n  - Combined Suspicion Score: 0.52/1.00\n\nCONCLUSION:\nThe evidence is inconclusive. Some artifacts are present, but they could potentially be attributed to video compression, lighting conditions, or other non-malicious factors. Further analysis or higher-quality source material would be needed for confident classification.",
+    "evidence": {
+      "frame_observations": "Frame 0:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)\nFrame 1:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)\nFrame 3:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)\nFrame 6:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)\nFrame 9:\n  - Moderate texture variance (some smoothing possible)\n  - Low edge density (possible boundary blending)",
+      "temporal_observations": "Temporal analysis across 10 frames:\n  - Very low motion between frames 0 and 1 (potentially static/frozen)\n  - Very low motion between frames 1 and 2 (potentially static/frozen)\n  - Very low motion between frames 2 and 3 (potentially static/frozen)\n  - Very low motion between frames 3 and 4 (potentially static/frozen)\n  - Very low motion between frames 4 and 5 (potentially static/frozen)\n  - Very low motion between frames 5 and 6 (potentially static/frozen)\n  - Very low motion between frames 6 and 7 (potentially static/frozen)\n  - Very low motion between frames 7 and 8 (potentially static/frozen)\n  - Very low motion between frames 8 and 9 (potentially static/frozen)\n"
+    }
+  },
+  "system": {
+    "model_name": "v1.0",
+    "api_provider": "local",
+    "timestamp": "2025-12-29T19:12:50.657904"
+  }
+}

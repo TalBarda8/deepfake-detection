@@ -42,13 +42,14 @@ Examples:
   python detect.py --batch data/videos/fake/*.mp4 --output-dir results/
 
 Supported Providers:
-  - anthropic: Claude 3.5 Sonnet (default)
-  - openai: GPT-4 with vision
+  - local: Self-contained reasoning agent (default, no API required)
+  - anthropic: Claude 3.5 Sonnet (requires API key)
+  - openai: GPT-4 with vision (requires API key)
   - mock: Testing mode without API calls
 
-Environment Variables:
-  ANTHROPIC_API_KEY: API key for Anthropic (Claude)
-  OPENAI_API_KEY: API key for OpenAI (GPT-4)
+Environment Variables (optional):
+  ANTHROPIC_API_KEY: API key for Anthropic (Claude) - only if using --provider anthropic
+  OPENAI_API_KEY: API key for OpenAI (GPT-4) - only if using --provider openai
         """
     )
 
@@ -87,9 +88,9 @@ Environment Variables:
     parser.add_argument(
         '--provider', '-p',
         type=str,
-        choices=['anthropic', 'openai', 'mock'],
-        default='anthropic',
-        help='LLM provider to use (default: anthropic)'
+        choices=['local', 'anthropic', 'openai', 'mock'],
+        default='local',
+        help='Analysis provider to use (default: local)'
     )
     parser.add_argument(
         '--model', '-m',

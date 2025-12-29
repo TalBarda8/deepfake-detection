@@ -1,0 +1,79 @@
+======================================================================
+DEEPFAKE DETECTION - DETAILED ANALYSIS REPORT
+======================================================================
+
+VIDEO INFORMATION
+----------------------------------------------------------------------
+Filename: Unknown
+Path: Unknown
+Duration: 0.00 seconds
+Resolution: Unknown
+Frame Rate: 0.00 fps
+Codec: Unknown
+File Size: 0.00 MB
+
+DETECTION RESULTS
+----------------------------------------------------------------------
+Classification: UNCERTAIN
+Confidence Level: 50%
+Frames Analyzed: 10
+Sampling Strategy: uniform
+
+FRAME-LEVEL OBSERVATIONS
+----------------------------------------------------------------------
+Frame 0:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+Frame 1:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+Frame 3:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+Frame 6:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+Frame 9:
+  - Moderate texture variance (some smoothing possible)
+  - Low edge density (possible boundary blending)
+
+TEMPORAL OBSERVATIONS
+----------------------------------------------------------------------
+Temporal analysis across 10 frames:
+  - Very low motion between frames 0 and 1 (potentially static/frozen)
+  - Very low motion between frames 1 and 2 (potentially static/frozen)
+  - Very low motion between frames 2 and 3 (potentially static/frozen)
+  - Very low motion between frames 3 and 4 (potentially static/frozen)
+  - Very low motion between frames 4 and 5 (potentially static/frozen)
+  - Very low motion between frames 5 and 6 (potentially static/frozen)
+  - Very low motion between frames 6 and 7 (potentially static/frozen)
+  - Very low motion between frames 7 and 8 (potentially static/frozen)
+  - Very low motion between frames 8 and 9 (potentially static/frozen)
+
+
+FINAL REASONING
+----------------------------------------------------------------------
+Classification: UNCERTAIN (Confidence: 50%)
+
+The analysis reveals mixed signals, making confident classification difficult.
+
+KEY EVIDENCE:
+  - Very low motion between frames 2 and 3 (potentially static/frozen)
+  - Low edge density (possible boundary blending)
+  - Very low motion between frames 3 and 4 (potentially static/frozen)
+  - Very low motion between frames 4 and 5 (potentially static/frozen)
+  - Very low motion between frames 0 and 1 (potentially static/frozen)
+
+ANALYSIS BREAKDOWN:
+  - Visual Artifacts: 5 indicators detected
+  - Temporal Consistency: 9 issues identified
+  - Frames Analyzed: 5
+  - Combined Suspicion Score: 0.52/1.00
+
+CONCLUSION:
+The evidence is inconclusive. Some artifacts are present, but they could potentially be attributed to video compression, lighting conditions, or other non-malicious factors. Further analysis or higher-quality source material would be needed for confident classification.
+
+======================================================================
+Model Used: v1.0
+Analysis Timestamp: 2025-12-29T19:12:50.657904
+======================================================================

@@ -1,0 +1,132 @@
+# Deepfake Detection Rules - Version 1.0
+# Rule-based heuristics for identifying deepfake artifacts
+
+# Visual Artifact Detection Rules
+visual_rules:
+  facial_smoothing:
+    weight: 0.25
+    description: "Detects unnatural skin smoothing characteristic of GAN-generated faces"
+    indicators:
+      - uniform_texture_in_face_region
+      - loss_of_pore_detail
+      - unnatural_skin_consistency
+      - low_frequency_dominance
+    thresholds:
+      high_suspicion_var: 100    # Laplacian variance < 100
+      moderate_suspicion_var: 200 # Laplacian variance < 200
+
+  lighting_inconsistency:
+    weight: 0.20
+    description: "Detects mismatches between facial lighting and environmental lighting"
+    indicators:
+      - face_background_lighting_mismatch
+      - shadow_direction_inconsistency
+      - specular_highlight_anomalies
+      - uniform_gradient_distribution
+    thresholds:
+      low_gradient_std: 20  # Standard deviation < 20
+
+  boundary_artifacts:
+    weight: 0.20
+    description: "Detects warping or blending artifacts at face boundaries"
+    indicators:
+      - warping_at_face_edges
+      - blending_artifacts_near_hair
+      - discontinuity_at_face_boundary
+      - abnormal_edge_density
+    thresholds:
+      low_edge_density: 0.05  # < 5% edge pixels
+      high_edge_density: 0.20  # > 20% edge pixels
+
+  resolution_mismatch:
+    weight: 0.15
+    description: "Detects resolution inconsistencies between face and background"
+    indicators:
+      - face_sharper_than_background
+      - compression_artifact_patterns
+      - frequency_domain_inconsistencies
+
+# Temporal Consistency Rules
+temporal_rules:
+  motion_continuity:
+    weight: 0.30
+    description: "Detects discontinuities in motion across frames"
+    indicators:
+      - jitter_in_facial_features
+      - discontinuous_motion_vectors
+      - frame_to_frame_position_jumps
+    thresholds:
+      high_motion_diff: 50   # Frame diff > 50
+      low_motion_diff: 5     # Frame diff < 5 (frozen frames)
+
+  blinking_patterns:
+    weight: 0.20
+    description: "Analyzes eye blinking naturalness"
+    indicators:
+      - unnatural_blink_frequency
+      - incomplete_eye_closure
+      - symmetric_eye_artifacts
+
+  temporal_artifacts:
+    weight: 0.50
+    description: "Detects temporal inconsistencies and flickering"
+    indicators:
+      - flickering_at_boundaries
+      - temporal_warping
+      - frame_interpolation_artifacts
+      - inter_frame_discontinuities
+
+# Confidence Score Calculation
+confidence_calculation:
+  high_confidence_threshold: 0.75
+  moderate_confidence_threshold: 0.55
+  uncertain_threshold: 0.45
+
+  # Confidence mapping (combined_score → confidence %)
+  fake_high:
+    score_range: [0.75, 1.0]
+    confidence_range: [70, 95]
+
+  fake_moderate:
+    score_range: [0.55, 0.75]
+    confidence_range: [55, 85]
+
+  uncertain:
+    score_range: [0.45, 0.55]
+    confidence: 50
+
+  real_moderate:
+    score_range: [0.25, 0.45]
+    confidence_range: [55, 85]
+
+  real_high:
+    score_range: [0.0, 0.25]
+    confidence_range: [70, 95]
+
+# Weighting Strategy
+score_combination:
+  visual_weight: 0.6
+  temporal_weight: 0.4
+  formula: "(avg_visual_score * 0.6) + (temporal_score * 0.4)"
+
+# Evidence Compilation Rules
+evidence_rules:
+  min_findings_for_classification: 1
+  max_findings_to_report: 10
+  prioritize_high_weight_artifacts: true
+
+# Output Formatting
+output_formatting:
+  include_frame_references: true
+  include_artifact_scores: true
+  natural_language_style: "academic_analytical"
+  reasoning_structure:
+    - classification_statement
+    - key_evidence_summary
+    - analysis_breakdown
+    - conclusion
+
+# Version Control
+rules_version: "1.0.0"
+last_updated: "2025-12-29"
+compatible_agent_versions: ["1.0.0"]
