@@ -285,7 +285,14 @@ deepfake-detection/
 │   ├── deepfake_generation.md   # Deepfake generation documentation
 │   ├── detection_agent.md       # Detection system documentation
 │   ├── evaluation.md            # System evaluation and academic analysis
+│   ├── TESTING.md               # Unit testing documentation
 │   └── PHASE2_COMPLETION_GUIDE.md
+├── tests/                       # Unit test suite
+│   ├── __init__.py
+│   ├── test_video_processor.py  # Video processing tests
+│   ├── test_llm_analyzer.py     # LLM analyzer tests
+│   ├── test_detector.py         # Detector orchestration tests
+│   └── test_output_formatter.py # Output formatting tests
 ├── results/                     # Analysis results (optional)
 ├── detect.py                    # Main CLI entry point
 ├── requirements.txt             # Python dependencies
@@ -300,6 +307,7 @@ deepfake-detection/
 - **[detection_agent.md](docs/detection_agent.md)**: Detailed system architecture and design decisions
 - **[deepfake_generation.md](docs/deepfake_generation.md)**: Deepfake video generation process
 - **[evaluation.md](docs/evaluation.md)**: System evaluation methodology and academic analysis
+- **[TESTING.md](docs/TESTING.md)**: Unit testing documentation and guidelines
 
 ## Methodology
 
@@ -401,6 +409,38 @@ Detailed evaluation including:
 The academic value lies in demonstrating **LLM-based reasoning for deepfake detection** with interpretable, transparent analysis.
 
 ## Testing
+
+### Unit Tests
+
+Run the unit test suite to verify core functionality:
+
+```bash
+# Run all tests
+pytest
+
+# Run with verbose output
+pytest -v
+
+# Run tests with coverage report
+pytest --cov=src --cov-report=html
+```
+
+**Test Coverage**: 60-70% coverage of core modules (video_processor, llm_analyzer, detector, output_formatter).
+
+**What is tested**:
+- Frame sampling strategies
+- Metadata extraction and parsing
+- LLM prompt construction
+- Response parsing and classification
+- Detection pipeline orchestration
+- Output formatting (console, JSON, text)
+
+**What is mocked**:
+- FFmpeg calls (subprocess)
+- OpenCV video operations
+- LLM API calls (Anthropic/OpenAI)
+
+See **[docs/TESTING.md](docs/TESTING.md)** for comprehensive testing documentation.
 
 ### Mock Mode
 
