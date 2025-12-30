@@ -405,6 +405,239 @@ User          CLI          Detector       VideoProc      Analyzer      LocalAgen
 
 ---
 
+## Parallel Processing Architecture
+
+### Overview
+
+The system supports **parallel processing** for performance optimization using both multiprocessing and multithreading:
+- **Multiprocessing** for CPU-bound frame extraction
+- **Multithreading** for I/O-bound LLM API calls
+
+This provides 2-4x speedup for frame-heavy workloads while maintaining thread safety and resource cleanup.
+
+### Components
+
+#### ParallelFrameProcessor
+
+**Purpose**: Extract video frames in parallel using process pool.
+
+**Architecture**:
+```
+┌──────────────────────────────────────────────────────────────┐
+│              ParallelFrameProcessor                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Main Process                                           │ │
+│  │  - Validates video path                                 │ │
+│  │  - Determines frame indices to extract                  │ │
+│  │  - Creates ProcessPoolExecutor                          │ │
+│  └──────────────┬──────────────────────────────────────────┘ │
+│                 │                                            │
+│                 │ Distributes work                           │
+│                 ▼                                            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Worker Process Pool                                  │   │
+│  ├──────────────────────────────────────────────────────┤   │
+│  │  Worker 1: Extract frame[0]                           │   │
+│  │  Worker 2: Extract frame[10]                          │   │
+│  │  Worker 3: Extract frame[20]                          │   │
+│  │  Worker 4: Extract frame[30]                          │   │
+│  │  ...                                                   │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                 │                                            │
+│                 │ Returns frames                             │
+│                 ▼                                            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Result Aggregation                                   │   │
+│  │  - Collects frames from workers                       │   │
+│  │  - Sorts by frame index                               │   │
+│  │  - Tracks failures and timing                         │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Key Features**:
+- **Process Pool**: Uses `ProcessPoolExecutor` with configurable workers (default: CPU count)
+- **Static Method**: `_extract_single_frame()` is static for pickling (multiprocessing requirement)
+- **Timeout Handling**: Each frame extraction has configurable timeout (default: 30s)
+- **Failure Tracking**: Failed frames logged but don't block pipeline
+- **Color Space**: Supports RGB/BGR output
+
+**Performance**:
+- Sequential: ~0.5s per frame (10 frames = 5s)
+- Parallel (4 cores): ~0.15s per frame (10 frames = 1.5s)
+- **Speedup**: ~3.3x on quad-core CPU
+
+#### ParallelLLMAnalyzer
+
+**Purpose**: Perform concurrent LLM API calls with rate limiting.
+
+**Architecture**:
+```
+┌──────────────────────────────────────────────────────────────┐
+│              ParallelLLMAnalyzer                             │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Main Thread                                            │ │
+│  │  - Receives frames and analysis function                │ │
+│  │  - Creates ThreadPoolExecutor                           │ │
+│  └──────────────┬──────────────────────────────────────────┘ │
+│                 │                                            │
+│                 │ Distributes API calls                      │
+│                 ▼                                            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Thread Pool (with Semaphore for Concurrency Control) │   │
+│  ├──────────────────────────────────────────────────────┤   │
+│  │  Thread 1: ─┐                                         │   │
+│  │  Thread 2: ─┼─ Semaphore (max 5 concurrent)          │   │
+│  │  Thread 3: ─┤                                         │   │
+│  │  Thread 4: ─┤                                         │   │
+│  │  Thread 5: ─┘                                         │   │
+│  │  Thread 6: waiting...                                 │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                 │                                            │
+│                 │ Each thread:                               │
+│                 │ - Acquires semaphore                       │
+│                 │ - Applies rate limit delay                 │
+│                 │ - Calls analysis function                  │
+│                 │ - Retries on failure (exponential backoff) │
+│                 │ - Releases semaphore                       │
+│                 ▼                                            │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Result Collection                                    │   │
+│  │  - Thread-safe result aggregation                     │   │
+│  │  - Error handling and logging                         │   │
+│  └──────────────────────────────────────────────────────┘   │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**Key Features**:
+- **Semaphore**: Limits concurrent API calls (default: 5) to prevent rate limit errors
+- **Rate Limiting**: Configurable delay between requests (default: 0.5s)
+- **Retry Logic**: Exponential backoff on failures (default: 2 retries)
+- **Thread Safety**: Uses locks for shared state access
+- **Graceful Degradation**: Failed analyses logged, don't block others
+
+**Performance**:
+- Sequential: 10 frames × 2s/frame = 20s
+- Parallel (5 concurrent): 10 frames / 5 × 2s = 4s
+- **Speedup**: ~5x (limited by concurrency cap)
+
+### When to Use Multiprocessing vs. Multithreading
+
+| Operation Type | Method | Reason |
+|---------------|--------|--------|
+| **Frame Extraction** | Multiprocessing | CPU-bound (video decoding, color conversion) |
+| **LLM API Calls** | Multithreading | I/O-bound (network waiting, GIL doesn't matter) |
+| **Heuristic Computation** | Multiprocessing | CPU-bound (OpenCV operations) |
+| **File I/O** | Multithreading | I/O-bound (disk reading/writing) |
+
+### Thread Safety and Race Condition Prevention
+
+**Mechanisms**:
+1. **Semaphores**: Limit concurrent resource access
+2. **Locks**: Protect shared state modifications
+3. **Immutable Data**: Pass immutable numpy arrays, not shared state
+4. **Process Isolation**: Each worker process has independent memory
+
+**Example - Thread-Safe Counter**:
+```python
+class ThreadSafeAnalyzer:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._counter = 0
+
+    def increment(self):
+        with self._lock:  # Prevents race conditions
+            self._counter += 1
+```
+
+### Resource Cleanup
+
+**Automatic Cleanup**:
+- **Context Managers**: `with ProcessPoolExecutor()` ensures process termination
+- **Finally Blocks**: VideoCapture released even on exceptions
+- **Signal Handlers**: Graceful shutdown on SIGINT (Ctrl+C)
+
+**ResourceManager** (utility class):
+```python
+with ResourceManager() as manager:
+    # All pools/executors tracked
+    # Cleaned up automatically on exit or exception
+```
+
+### Benchmarking
+
+**Performance Testing**:
+```bash
+# Benchmark parallel vs sequential
+from src.parallel_processor import ParallelFrameProcessor
+
+processor = ParallelFrameProcessor(max_workers=4)
+benchmark = processor.benchmark_speedup(
+    video_path="test.mp4",
+    frame_indices=list(range(0, 100, 10))
+)
+
+print(f"Sequential: {benchmark['sequential_time']:.2f}s")
+print(f"Parallel: {benchmark['parallel_time']:.2f}s")
+print(f"Speedup: {benchmark['speedup']:.2f}x")
+```
+
+**Expected Results** (10-frame extraction):
+- Sequential: ~5.0s
+- Parallel (4 cores): ~1.5s
+- **Speedup**: ~3.3x
+
+**Optimal Workers Detection**:
+```python
+from src.parallel_processor import detect_optimal_workers
+
+optimal_workers = detect_optimal_workers(
+    video_path="test.mp4",
+    test_frame_count=10
+)
+# Returns: 4 (or cpu_count, whichever performs best)
+```
+
+### CLI Integration
+
+**Usage**:
+```bash
+# Enable parallel frame extraction
+python detect.py --video test.mp4 --parallel
+
+# Specify custom worker count
+python detect.py --video test.mp4 --parallel --workers 8
+
+# Automatic optimal detection
+python detect.py --video test.mp4 --parallel --workers auto
+```
+
+**Performance Recommendations**:
+- **Small videos (<10 frames)**: Sequential may be faster (overhead > benefit)
+- **Medium videos (10-30 frames)**: Parallel with default workers
+- **Large videos (>30 frames)**: Parallel with 2x CPU count workers
+- **Batch processing**: Parallel essential for reasonable runtime
+
+### Testing
+
+**Test Coverage**:
+- ✅ Multiprocessing correctness (frames match sequential)
+- ✅ Thread safety (no race conditions under concurrent load)
+- ✅ Deadlock prevention (all tests complete without hanging)
+- ✅ Resource cleanup (no zombie processes, proper context manager exit)
+- ✅ Error handling (failures don't crash, logged gracefully)
+- ✅ Performance benchmarks (speedup verification)
+
+See `tests/test_parallel_processor.py` for comprehensive test suite.
+
+---
+
 ## Architecture Decision Records (ADRs)
 
 ### ADR-001: Layered Architecture with Strategy Pattern

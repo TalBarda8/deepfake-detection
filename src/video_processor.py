@@ -311,6 +311,67 @@ class VideoProcessor:
             'sampling_strategy': sampling_strategy
         }
 
+    def get_metadata(self) -> Dict:
+        """
+        Get video metadata (cached or extract if not available).
+
+        Returns:
+            Video metadata dictionary
+        """
+        if self.metadata is None:
+            self.extract_metadata()
+        return self.metadata
+
+    def get_frame_indices(
+        self,
+        sampling_strategy: str = 'uniform',
+        num_frames: Optional[int] = None
+    ) -> List[int]:
+        """
+        Calculate frame indices to extract without actually extracting frames.
+
+        Args:
+            sampling_strategy: Frame sampling strategy ('uniform', 'keyframes', 'adaptive')
+            num_frames: Number of frames (default: use self.num_frames)
+
+        Returns:
+            List of frame indices to extract
+        """
+        if num_frames is not None:
+            # Temporarily override num_frames
+            original_num_frames = self.num_frames
+            self.num_frames = num_frames
+
+        try:
+            cap = cv2.VideoCapture(str(self.video_path))
+            if not cap.isOpened():
+                raise RuntimeError(f"Failed to open video: {self.video_path}")
+
+            try:
+                total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+                if total_frames == 0:
+                    raise ValueError("Video has no frames")
+
+                # Determine frame indices based on strategy
+                if sampling_strategy == 'uniform':
+                    frame_indices = self._uniform_sampling(total_frames)
+                elif sampling_strategy == 'keyframes':
+                    frame_indices = self._keyframe_sampling(cap, total_frames)
+                elif sampling_strategy == 'adaptive':
+                    frame_indices = self._adaptive_sampling(cap, total_frames)
+                else:
+                    raise ValueError(f"Unknown sampling strategy: {sampling_strategy}")
+
+                return frame_indices
+
+            finally:
+                cap.release()
+        finally:
+            # Restore original num_frames if it was temporarily overridden
+            if num_frames is not None:
+                self.num_frames = original_num_frames
+
 
 def validate_video_file(video_path: str) -> Tuple[bool, Optional[str]]:
     """

@@ -34,7 +34,9 @@ class DeepfakeDetector:
         num_frames: int = 10,
         sampling_strategy: str = "uniform",
         prompts_dir: str = "prompts",
-        verbose: bool = False
+        verbose: bool = False,
+        use_parallel: bool = False,
+        max_workers: Optional[int] = None
     ):
         """
         Initialize deepfake detector.
@@ -47,12 +49,16 @@ class DeepfakeDetector:
             sampling_strategy: Frame sampling strategy ('uniform', 'keyframes', 'adaptive')
             prompts_dir: Directory containing prompt templates
             verbose: Enable verbose logging
+            use_parallel: Enable parallel processing for frame extraction
+            max_workers: Number of parallel workers (default: auto-detect)
         """
         self.api_provider = api_provider
         self.model_name = model_name
         self.num_frames = num_frames
         self.sampling_strategy = sampling_strategy
         self.verbose = verbose
+        self.use_parallel = use_parallel
+        self.max_workers = max_workers
 
         # Initialize LLM analyzer
         self.llm_analyzer = LLMAnalyzer(
@@ -153,8 +159,48 @@ class DeepfakeDetector:
         Returns:
             Dictionary with metadata, frames, and timestamps
         """
-        processor = VideoProcessor(video_path, num_frames=self.num_frames)
-        video_data = processor.process(sampling_strategy=self.sampling_strategy)
+        if self.use_parallel:
+            # Use parallel frame extraction
+            from .parallel_processor import ParallelFrameProcessor
+
+            self.logger.info(f"Using parallel frame extraction with {self.max_workers or 'auto'} workers")
+
+            # First get video metadata using regular processor
+            processor = VideoProcessor(video_path, num_frames=self.num_frames)
+            metadata = processor.get_metadata()
+
+            # Get frame indices based on sampling strategy
+            frame_indices = processor.get_frame_indices(
+                sampling_strategy=self.sampling_strategy,
+                num_frames=self.num_frames
+            )
+
+            # Extract frames in parallel
+            parallel_processor = ParallelFrameProcessor(
+                max_workers=self.max_workers,
+                color_space='RGB'
+            )
+            frames, extraction_metadata = parallel_processor.extract_frames_parallel(
+                video_path,
+                frame_indices
+            )
+
+            self.logger.info(
+                f"Parallel extraction: {extraction_metadata['total_frames_extracted']} frames "
+                f"in {extraction_metadata['extraction_time_seconds']:.2f}s "
+                f"({extraction_metadata['frames_per_second']:.1f} fps)"
+            )
+
+            video_data = {
+                'frames': frames,
+                'metadata': metadata,
+                'frame_indices': frame_indices,
+                'extraction_metadata': extraction_metadata
+            }
+        else:
+            # Use sequential processing
+            processor = VideoProcessor(video_path, num_frames=self.num_frames)
+            video_data = processor.process(sampling_strategy=self.sampling_strategy)
 
         self.logger.debug(f"Extracted {len(video_data['frames'])} frames")
         self.logger.debug(f"Video metadata: {video_data['metadata']}")
