@@ -57,10 +57,12 @@ htmlcov/
 
 # Jupyter notebooks
 .ipynb_checkpoints/
-*.ipynb
+# Keep analysis notebooks
+# *.ipynb
 
 # OS
 Thumbs.db
 
-# Reference documents
+# Reference documents (allow PDFs in academic/ directory)
 *.pdf
+!academic/*.pdf
