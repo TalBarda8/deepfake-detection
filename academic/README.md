@@ -18,8 +18,9 @@ This directory contains materials related to the academic submission and evaluat
 
 ### Verification Tools
 
-- **`demo.sh`**: Automated demonstration script showing all features
-- **`verify_requirements.py`**: Automated requirements verification script
+Located in project root for easy access:
+- **`../demo.sh`**: Automated demonstration script showing all features
+- **`../verify_requirements.py`**: Automated requirements verification script
 
 ### Reference Materials
 
@@ -30,9 +31,9 @@ This directory contains materials related to the academic submission and evaluat
 
 If you're grading this project, start with:
 
-1. **`GRADING_GUIDE.md`** - Complete evaluation guide with line numbers and test commands
-2. **`demo.sh`** - Run automated demo to see all features (2 minutes)
-3. **`verify_requirements.py`** - Automated verification of all requirements (1 minute)
+1. **`GRADING_GUIDE.md`** (in this directory) - Complete evaluation guide with line numbers and test commands
+2. **`bash demo.sh`** (from project root) - Run automated demo to see all features (2 minutes)
+3. **`python3 verify_requirements.py`** (from project root) - Automated verification of all requirements (1 minute)
 
 ## Project Metrics
 
